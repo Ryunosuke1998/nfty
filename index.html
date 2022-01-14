@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="CSS/main.css" />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <title>NFT MARKET</title>
+</head>
+<body onload="finLoad();">
+    <!-- ↓背景画像↓ -->
+    <div id="anim_img_box">
+        <img id="anim_img" src="IMG/vid_Tunnel/001.jpg" />
+    </div>
+    <div class="box">
+        <p class="inner" id="title">NFT MARKET</p>
+        <div style="margin: 30vw auto auto auto; position: absolute; left: 0; right: 0; text-align: center;">
+            <div class="button02">
+                <a href="../TST0001/TST0001.aspx">マーケットを訪れる</a>
+            </div>
+        </div>
+        <div class="scrolldown4"></div>
+    </div>
+    <div id="one" class="fadeUpTrigger">
+        <span class="headerText TextRandomAnime">NFTとは？</span>
+    </div>
+
+    <div id="two" class="fadeUpTrigger">
+        <span class="headerText  TextRandomAnime">NFTの買い方</span>
+    </div>
+
+    <div id="three" class="fadeUpTrigger">
+        <span class="headerText TextRandomAnime">出品者の利益</span>
+    </div>
+    <div class="roadmap">
+        <div style="font-size: 2em; color: white; padding-top: 1%;">ロードマップ</div>
+        <div style="display: flex">
+            <div class="topLeft" style="width: 50%;">
+                1
+            </div>
+            <div class="topRight" style="width: 50%;">
+                2
+            </div>
+        </div>
+        <div style="display: flex">
+            <div class="bottumLeft" style="width: 50%;">
+                3
+            </div>
+            <div class="bottumRight" style="width: 50%;">
+                4
+            </div>
+        </div>
+
+    </div>
+    <div class="footer">
+        <div class="footer_inner">
+            <div class="footer_inner_left">
+                <span id="logo">NFT MARKET</span>
+                <p>
+                    私たちは、クリエイター主導の組織です。NFT MARKETは、
+                    ブロックチェーン認証を使用し、一点もののデジタル作品
+                    実現しています。
+                </p>
+            </div>
+            <div class="footer_inner_right">
+                <a href="https://twitter.com/Ryu56068403" class="btnlinestretches3"><span>TWITTER</span></a><br />
+                <a href="#" class="btnlinestretches3"><span>INSTAGRAM</span></a>
+            </div>
+        </div>
+        <div class="copyright">
+            <p id="copyright">&copy; 2022 IUCHI</p>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript">
+
+    //==========================================
+    //ロード完了
+    //==========================================
+    function finLoad() {
+        try {
+            //画面遷移
+            //document.location.assign("../TST0001/TST0001.aspx");
+
+            loadImageToTmp();
+        } catch (e) {
+            alert(e);
+        }
+
+    };
+    //==========================================
+    //画像コマ送り
+    //==========================================
+    const SIZE = 380; // 枚数
+    var tmp = {};
+    function loadImageToTmp() {
+        for (var i = 1; i <= SIZE; i++) {
+            const _i = i;
+            const img = new Image();
+            tmp[_i] = null;
+            var ret = ('000' + _i).slice(-3);
+            img.src = "IMG/vid_Tunnel/" + ret + ".jpg"; // 連続するファイル名
+            img.addEventListener("load", () => {
+                tmp[_i] = img;
+            })
+        }
+    }
+
+    const PX = 10; // 5px分の移動ごと画像を1枚進める   
+    const offset = $("#anim_img_box").offset(); // 画像を入れるdiv要素(position:stickyでトップに来たら固定される)
+    $(window).scroll(function () {
+        try {
+            var image = document.getElementById("anim_img");
+            const y = $(window).scrollTop();
+            const dy = y - offset.top;
+            if (offset.top < y && y < offset.top + SIZE * PX) {
+                $("#anim_img_box").css("top", 0)
+                const i = Math.floor(dy / PX);
+                if (i <= 0 || i >= SIZE) return;
+                if (tmp[i].src) image.src = tmp[i].src;
+                image = tmp[i].src;
+            } else if (y >= offset.top + SIZE * PX) {
+                $("#anim_img_box").css("top", "-" + (dy - SIZE * PX)); // スクロール分が終了したときに移動を始める
+            }
+        } catch (e) {
+            alert(e);
+        };
+
+    });
+
+    //==========================================
+    //テキストがランダムに出現
+    //==========================================
+    // TextRandomAnimeにappearRandomtextというクラス名を付ける定義
+    function TextRandomAnimeControl() {
+        $('.TextRandomAnime').each(function () {
+            var elemPos = $(this).offset().top - 50;
+            var scroll = $(window).scrollTop();
+            var windowHeight = $(window).height();
+            if (scroll >= elemPos - windowHeight) {
+                $(this).addClass("appearRandomtext");
+
+            } else {
+                $(this).removeClass("appearRandomtext");
+            }
+        });
+    }
+
+    // 画面をスクロールをしたら動かしたい場合の記述
+    $(window).scroll(function () {
+        TextRandomAnimeControl();/* アニメーション用の関数を呼ぶ*/
+    });// ここまで画面をスクロールをしたら動かしたい場合の記述
+
+    // 画面が読み込まれたらすぐに動かしたい場合の記述
+    $(window).on('load', function () {
+        //spanタグを追加する
+        var element = $(".TextRandomAnime");
+        element.each(function () {
+            var text = $(this).text();
+            var textbox = '';
+            text.split('').forEach(function (t) {
+                textbox += '<span>' + t + '</span>';
+            });
+            $(this).html(textbox);
+        });
+
+        TextRandomAnimeControl();/* アニメーション用の関数を呼ぶ*/
+    });// ここまで画面が読み込まれたらすぐに動かしたい場合の記述
+
+
+    //==========================================
+    //下からふわっと出現
+    //==========================================
+    // 動きのきっかけとなるアニメーションの名前を定義
+    function fadeAnime() {
+
+        // ふわっ
+        $('.fadeUpTrigger').each(function () { //fadeUpTriggerというクラス名が
+            var elemPos = $(this).offset().top - 50;//要素より、50px上の
+            var scroll = $(window).scrollTop();
+            var windowHeight = $(window).height();
+            if (scroll >= elemPos - windowHeight) {
+                $(this).addClass('fadeUp');// 画面内に入ったらfadeUpというクラス名を追記
+            } else {
+                $(this).removeClass('fadeUp');// 画面外に出たらfadeUpというクラス名を外す
+            }
+        });
+    }
+
+    // 画面をスクロールをしたら動かしたい場合の記述
+    $(window).scroll(function () {
+        fadeAnime();/* アニメーション用の関数を呼ぶ*/
+    });// ここまで画面をスクロールをしたら動かしたい場合の記述
+
+    // 画面が読み込まれたらすぐに動かしたい場合の記述
+    $(window).on('load', function () {
+        fadeAnime();/* アニメーション用の関数を呼ぶ*/
+    });// ここまで画面が読み込まれたらすぐに動かしたい場合の記述
+
+    //==========================================
+    //指定の要素までスクロール
+    //==========================================
+    //$('#page-link a[href*="#"]').click(function () {
+    //    var elmHash = $(this).attr('href'); //ページ内リンクのHTMLタグhrefから、リンクされているエリアidの値を取得
+    //    var pos = $(elmHash).offset().top;  //idの上部の距離を取得
+    //    $('body,html').animate({ scrollTop: pos }, 500); //取得した位置にスクロール。500の数値が大きくなるほどゆっくりスクロール
+    //    return false;
+    //});
+</script>
+
+</html>
